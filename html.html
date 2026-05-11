@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <title>Shree Ambica Enterprise • 3‑Step Review Studio</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --bg-body: #0B0E14;
+      --bg-surface: #11161F;
+      --bg-elevated: #18202C;
+      --bg-card: #1A2330;
+      --border-subtle: #2A3442;
+      --border-focus: #378ADD;
+      --text-primary: #F0F3F8;
+      --text-secondary: #B0C4DE;
+      --text-tertiary: #7C8BA0;
+      --accent-blue: #378ADD;
+      --accent-blue-hover: #2b6fb0;
+      --accent-glow: rgba(55, 138, 221, 0.2);
+      --success-green: #2E9A6E;
+      --success-bg: rgba(46, 154, 110, 0.15);
+    }
+
+    body {
+      background: var(--bg-body);
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      color: var(--text-primary);
+      padding: 0;
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    .app-wrapper {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+
+    .global-header {
+      text-align: center;
+      margin-bottom: 1.8rem;
+    }
+    .star-rating {
+      font-size: 28px;
+      letter-spacing: 3px;
+      color: #FFB83B;
+      margin-bottom: 8px;
+    }
+    .business-name {
+      font-size: 1.7rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #FFFFFF 0%, #B9D5FF 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 6px;
+    }
+    .biz-meta {
+      font-size: 0.8rem;
+      color: var(--text-tertiary);
+      background: rgba(55,138,221,0.12);
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 40px;
+    }
+
+    .step-container {
+      animation: fadeIn 0.25s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+
+    .categories-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 20px 0 100px;
+    }
+    .cat-option {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 16px 20px;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cat-option.active {
+      background: #102433;
+      border: 1.5px solid var(--accent-blue);
+      box-shadow: 0 0 0 2px var(--accent-glow);
+    }
+    .cat-name {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .cat-icon {
+      font-size: 1.3rem;
+    }
+    .sticky-generate-wrapper {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, var(--bg-body) 80%, transparent);
+      padding: 16px 20px 28px;
+      backdrop-filter: blur(2px);
+      z-index: 10;
+      max-width: 600px;
+      margin: 0 auto;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .generate-main-btn {
+      background: var(--accent-blue);
+      width: 100%;
+      border: none;
+      color: white;
+      padding: 16px 20px;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 60px;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: 0.2s;
+    }
+    .generate-main-btn:active {
+      transform: scale(0.97);
+      background: var(--accent-blue-hover);
+    }
+
+    .reviews-grid-step2 {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin: 16px 0 24px;
+      max-height: 460px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .review-card {
+      background: var(--bg-card);
+      border-radius: 20px;
+      padding: 18px;
+      border: 1px solid var(--border-subtle);
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .review-card.selected {
+      background: #102433;
+      border: 2px solid var(--accent-blue);
+    }
+    .review-tag {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #6E9FD1;
+      background: rgba(55,138,221,0.2);
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 40px;
+      margin-bottom: 12px;
+    }
+    .review-text {
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+    .selected-preview {
+      background: var(--bg-elevated);
+      border-radius: 20px;
+      padding: 14px;
+      margin: 16px 0 8px;
+      border-left: 3px solid var(--accent-blue);
+      font-size: 0.85rem;
+    }
+    .action-buttons-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 20px 0 12px;
+    }
+    .btn-secondary {
+      background: #1F2A3A;
+      border: 1px solid #3A4C62;
+      color: var(--text-secondary);
+      padding: 14px 18px;
+      border-radius: 60px;
+      font-weight: 600;
+      flex: 1;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+    .btn-secondary:active {
+      background: var(--accent-blue);
+      color: white;
+      border-color: var(--accent-blue);
+    }
+    .btn-primary {
+      background: var(--accent-blue);
+      border: none;
+      color: white;
+      padding: 14px 18px;
+      border-radius: 60px;
+      font-weight: 700;
+      flex: 1;
+      text-align: center;
+      cursor: pointer;
+    }
+    .copy-feedback {
+      background: var(--success-bg);
+      color: var(--success-green);
+      padding: 10px;
+      border-radius: 60px;
+      text-align: center;
+      font-size: 0.8rem;
+      margin-top: 8px;
+    }
+
+    .final-card {
+      background: var(--bg-card);
+      border-radius: 28px;
+      padding: 24px 20px;
+      text-align: center;
+      margin: 20px 0;
+    }
+    .final-review-box {
+      background: var(--bg-elevated);
+      border-radius: 24px;
+      padding: 18px;
+      margin: 20px 0;
+      word-break: break-word;
+      font-size: 0.9rem;
+      text-align: left;
+    }
+    .google-btn-big {
+      background: #1F2A3A;
+      border: 1px solid #5A7A9A;
+      padding: 16px;
+      border-radius: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #D4E6FF;
+      font-weight: 700;
+      margin: 16px 0;
+      transition: 0.2s;
+    }
+    .google-btn-big:active {
+      background: var(--accent-blue);
+      border-color: var(--accent-blue);
+      color: white;
+    }
+    .reset-link {
+      background: none;
+      border: none;
+      color: var(--text-tertiary);
+      text-decoration: underline;
+      margin-top: 20px;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    .copyright {
+      text-align: center;
+      font-size: 0.7rem;
+      color: var(--text-tertiary);
+      padding: 1.5rem 0 0.5rem;
+      margin-top: 1rem;
+      border-top: 0.5px solid var(--border-subtle);
+    }
+    .note-text {
+      font-size: 0.7rem;
+      color: var(--text-tertiary);
+      margin-top: 12px;
+    }
+    .empty-msg {
+      text-align: center;
+      padding: 40px 16px;
+      color: var(--text-tertiary);
+    }
+  </style>
+  <!-- external modules -->
+  <script src="database.js"></script>
+  <script src="generator.js"></script>
+</head>
+<body>
+<div class="app-wrapper">
+  <div class="global-header">
+    <div class="star-rating">★★★★★</div>
+    <div class="business-name" id="business-name">Shree Ambica Enterprise</div>
+    <div class="biz-meta" id="biz-meta">⭐ 4.9 ★ (2150+ reviews) • Welding & Industrial Solutions • Since 2012</div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div id="step1Container" class="step-container">
+    <div style="margin-bottom: 12px;">
+      <h3 style="font-size: 1.2rem;">📌 1. Choose a category</h3>
+      <p style="font-size: 0.75rem; color: var(--text-tertiary);">Tap any category → then press the fixed button below</p>
+    </div>
+    <div class="categories-grid" id="categoriesList"></div>
+    <div class="sticky-generate-wrapper">
+      <button class="generate-main-btn" id="step1GenerateBtn">✨ Generate 3 Fresh Reviews  →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div id="step2Container" class="step-container" style="display: none;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+      <h3>📋 2. Pick the best review</h3>
+      <span style="background: var(--accent-glow); padding: 4px 12px; border-radius: 40px; font-size: 0.7rem;">tap to select</span>
+    </div>
+    <div id="reviewsListStep2" class="reviews-grid-step2"></div>
+    <div id="selectedPreviewStep2" class="selected-preview">💡 Tap any review card above to select it.</div>
+    <div class="action-buttons-row">
+      <button id="copyReviewBtn" class="btn-secondary">📋 Copy review</button>
+      <button id="nextToStep3Btn" class="btn-primary">➡️ Next: Final step</button>
+    </div>
+    <div id="copyFeedbackMsg"></div>
+    <div class="note-text">✨ After copying, proceed to step 3 to open Google review page.</div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div id="step3Container" class="step-container" style="display: none;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h3>🌐 3. Publish your review</h3>
+      <button id="backToStep2Btn" class="reset-link" style="font-size:0.75rem;">← Edit selection</button>
+    </div>
+    <div class="final-card">
+      <span>✅ Selected review</span>
+      <div id="finalReviewTextDisplay" class="final-review-box">— No review selected —</div>
+      <a id="openGoogleReviewLink" href="#" target="_blank" class="google-btn-big">
+        🌍 Open Google Review → Paste your text
+      </a>
+      <button id="copyFinalBtn" class="btn-secondary" style="width:100%; margin-top: 6px;">📋 Copy review again</button>
+      <button id="restartFromStep1" class="reset-link">⟳ Start over (new category)</button>
+      <div class="note-text">💡 After opening Google Maps / Search, paste your copied review into the review box. Thank you for supporting Shree Ambica Enterprise!</div>
+    </div>
+  </div>
+
+  <div class="copyright">© 2026 · Shree Ambica Enterprise · Developed by Kevin Patel</div>
+</div>
+
+<script>
+  // ============================================================
+  // 3-STEP UI – USES GENERATOR.JS (which reads DATABASE.JS)
+  // No pre-written reviews – all reviews are generated on‑the‑fly
+  // ============================================================
+  (function() {
+    // UI category list (exactly as requested)
+    const UI_CATEGORIES = [
+      "All",
+      "Products",
+      "MIG Wire",
+      "TIG Wire",
+      "Welding Rods",
+      "Casting Rods",
+      "Cutting Rods",
+      "Cutting Torch",
+      "Accessories",
+      "Service",
+      "Owner (Kirtibhai Patel)",
+      "Value",
+      "Recommend"
+    ];
+
+    // DOM elements
+    const step1Div = document.getElementById('step1Container');
+    const step2Div = document.getElementById('step2Container');
+    const step3Div = document.getElementById('step3Container');
+    const categoriesContainer = document.getElementById('categoriesList');
+    const step1GenerateBtn = document.getElementById('step1GenerateBtn');
+    const reviewsListStep2 = document.getElementById('reviewsListStep2');
+    const selectedPreviewStep2 = document.getElementById('selectedPreviewStep2');
+    const copyReviewBtn = document.getElementById('copyReviewBtn');
+    const nextToStep3Btn = document.getElementById('nextToStep3Btn');
+    const copyFeedbackMsg = document.getElementById('copyFeedbackMsg');
+    const finalReviewTextDisplay = document.getElementById('finalReviewTextDisplay');
+    const openGoogleReviewLink = document.getElementById('openGoogleReviewLink');
+    const copyFinalBtn = document.getElementById('copyFinalBtn');
+    const restartFromStep1 = document.getElementById('restartFromStep1');
+    const backToStep2Btn = document.getElementById('backToStep2Btn');
+
+    let currentGeneratedReviews = [];   // {text, categoryLabel}
+    let selectedReviewText = "";
+    let activeCategory = "All";
+
+    // Helper to map UI category name to generator-compatible key + optional subHint
+    function mapToGeneratorCategory(uiCat) {
+      const mapping = {
+        "Products": "products",
+        "MIG Wire": "mig",
+        "TIG Wire": "tig",
+        "Welding Rods": "rods",
+        "Casting Rods": { key: "rods", subHint: "Casting Rods" },
+        "Cutting Rods": { key: "rods", subHint: "Cutting Rods" },
+        "Cutting Torch": { key: "torch", subHint: "Cutting Torch" },
+        "Accessories": "accessories",
+        "Service": "service",
+        "Owner (Kirtibhai Patel)": "owner",
+        "Value": "value",
+        "Recommend": "recommend",
+        "All": "all"
+      };
+      return mapping[uiCat] || "all";
+    }
+
+    // Render category selector
+    function renderCategories() {
+      categoriesContainer.innerHTML = '';
+      UI_CATEGORIES.forEach(catName => {
+        let icon = "📦";
+        if (catName.includes("MIG")) icon = "⚡";
+        else if (catName.includes("TIG")) icon = "🔥";
+        else if (catName.includes("Rod")) icon = "🥢";
+        else if (catName.includes("Torch")) icon = "🛠️";
+        else if (catName === "Service") icon = "🤝";
+        else if (catName === "Value") icon = "💰";
+        else if (catName === "Recommend") icon = "⭐";
+        else if (catName.includes("Owner")) icon = "👨‍💼";
+        else if (catName === "Accessories") icon = "🔧";
+        else if (catName === "All") icon = "🌟";
+        else icon = "📌";
+        
+        const catDiv = document.createElement('div');
+        catDiv.className = `cat-option ${activeCategory === catName ? 'active' : ''}`;
+        catDiv.innerHTML = `
+          <span class="cat-name">${icon} ${catName}</span>
+          <span class="cat-icon">✓</span>
+        `;
+        catDiv.addEventListener('click', () => {
+          activeCategory = catName;
+          renderCategories();
+        });
+        categoriesContainer.appendChild(catDiv);
+      });
+    }
+
+    // Generate 3 reviews using the generator engine
+    async function generateAndGoToStep2() {
+      // Check if generator API is available
+      if (typeof window.ReviewGenerator === 'undefined' || typeof window.ReviewGenerator.getRandomReviews !== 'function') {
+        alert("Generator engine not loaded. Please ensure generator.js is present.");
+        return;
+      }
+
+      const genConfig = mapToGeneratorCategory(activeCategory);
+      let categoryKey = typeof genConfig === 'string' ? genConfig : genConfig.key;
+      let subHint = typeof genConfig === 'object' ? genConfig.subHint : null;
+
+      try {
+        // Call the generator – returns array of clean review strings (no suffix)
+        const rawReviews = window.ReviewGenerator.getRandomReviews(categoryKey, 3, subHint);
+        
+        if (!rawReviews || rawReviews.length === 0) {
+          alert(`No reviews could be generated for "${activeCategory}". Try another category.`);
+          return;
+        }
+
+        // Build review objects with category label for display
+        currentGeneratedReviews = rawReviews.map(text => ({
+          text: text,
+          categoryLabel: activeCategory  // show the UI category name on card
+        }));
+
+        selectedReviewText = "";
+        renderStep2Reviews();
+        selectedPreviewStep2.innerHTML = "💡 Tap any review card above to select it.";
+        copyFeedbackMsg.innerHTML = "";
+        showStep(2);
+      } catch (err) {
+        console.error(err);
+        alert("Generation error: " + err.message);
+      }
+    }
+
+    function renderStep2Reviews() {
+      if (!currentGeneratedReviews.length) {
+        reviewsListStep2.innerHTML = '<div class="empty-msg">⚠️ No reviews. Please generate from step 1.</div>';
+        return;
+      }
+      reviewsListStep2.innerHTML = currentGeneratedReviews.map((rev, idx) => `
+        <div class="review-card" data-idx="${idx}" data-text="${escapeHtml(rev.text)}">
+          <div class="review-tag">📌 ${escapeHtml(rev.categoryLabel)}</div>
+          <div class="review-text">${escapeHtml(rev.text)}</div>
+        </div>
+      `).join('');
+
+      document.querySelectorAll('#reviewsListStep2 .review-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const text = card.getAttribute('data-text');
+          if (text) {
+            selectedReviewText = text;
+            document.querySelectorAll('#reviewsListStep2 .review-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            selectedPreviewStep2.innerHTML = `✏️ Selected: <br> “${escapeHtml(selectedReviewText)}”`;
+          }
+        });
+      });
+
+      if (!selectedReviewText && currentGeneratedReviews.length > 0) {
+        const firstCard = document.querySelector('#reviewsListStep2 .review-card');
+        if (firstCard) firstCard.click();
+      }
+    }
+
+    async function copySelectedReview() {
+      if (!selectedReviewText) {
+        copyFeedbackMsg.innerHTML = '<div class="copy-feedback">⚠️ No review selected. Tap a review card first.</div>';
+        setTimeout(() => { copyFeedbackMsg.innerHTML = ''; }, 2000);
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(selectedReviewText);
+        copyFeedbackMsg.innerHTML = '<div class="copy-feedback">✅ Review copied to clipboard! Now go to Step 3 ➡️</div>';
+        setTimeout(() => { if(copyFeedbackMsg.innerHTML.includes("copied")) copyFeedbackMsg.innerHTML = ''; }, 2500);
+      } catch (err) {
+        copyFeedbackMsg.innerHTML = '<div class="copy-feedback">❌ Manual copy: select text manually.</div>';
+      }
+    }
+
+    function goToStep3() {
+      if (!selectedReviewText) {
+        copyFeedbackMsg.innerHTML = '<div class="copy-feedback">❗ Please select a review (tap card) before proceeding.</div>';
+        setTimeout(() => { if(copyFeedbackMsg.innerHTML.includes("select")) copyFeedbackMsg.innerHTML = ''; }, 2000);
+        return;
+      }
+      finalReviewTextDisplay.innerText = selectedReviewText;
+      const businessQuery = encodeURIComponent("Shree Ambica Enterprise review");
+      openGoogleReviewLink.href = `https://www.google.com/search?q=${businessQuery}`;
+      showStep(3);
+    }
+
+    async function copyFinalSelected() {
+      if (!selectedReviewText) {
+        alert("No review to copy, please go back and select.");
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(selectedReviewText);
+        const tempMsg = document.createElement('div');
+        tempMsg.className = 'copy-feedback';
+        tempMsg.innerText = '📋 Review copied! Now paste into Google review box.';
+        document.getElementById('step3Container').appendChild(tempMsg);
+        setTimeout(() => tempMsg.remove(), 2000);
+      } catch(e) { alert("Copy manually: select the review text and copy."); }
+    }
+
+    function restartToStep1() {
+      currentGeneratedReviews = [];
+      selectedReviewText = "";
+      activeCategory = "All";
+      renderCategories();
+      showStep(1);
+      copyFeedbackMsg.innerHTML = "";
+    }
+
+    function backToStep2() {
+      if (currentGeneratedReviews.length) {
+        renderStep2Reviews();
+        if (selectedReviewText) {
+          selectedPreviewStep2.innerHTML = `✏️ Selected: <br> “${escapeHtml(selectedReviewText)}”`;
+          setTimeout(() => {
+            const cards = document.querySelectorAll('#reviewsListStep2 .review-card');
+            cards.forEach(card => {
+              if(card.getAttribute('data-text') === selectedReviewText) card.classList.add('selected');
+              else card.classList.remove('selected');
+            });
+          }, 20);
+        } else {
+          selectedPreviewStep2.innerHTML = "💡 Tap any review card to select.";
+        }
+      } else {
+        selectedPreviewStep2.innerHTML = "⚠️ No reviews, please regenerate from Step 1.";
+      }
+      showStep(2);
+    }
+
+    function showStep(step) {
+      step1Div.style.display = 'none';
+      step2Div.style.display = 'none';
+      step3Div.style.display = 'none';
+      if (step === 1) step1Div.style.display = 'block';
+      if (step === 2) step2Div.style.display = 'block';
+      if (step === 3) step3Div.style.display = 'block';
+    }
+
+    function escapeHtml(str) {
+      if(!str) return '';
+      return str.replace(/[&<>]/g, function(m) {
+        if(m === '&') return '&amp;';
+        if(m === '<') return '&lt;';
+        if(m === '>') return '&gt;';
+        return m;
+      });
+    }
+
+    function adjustStickyPadding() {
+      const stickyWrap = document.querySelector('.sticky-generate-wrapper');
+      if(stickyWrap && window.innerHeight) {
+        const bottomSafe = window.innerHeight - document.documentElement.clientHeight;
+        if(bottomSafe > 0) stickyWrap.style.paddingBottom = (28 + bottomSafe) + 'px';
+      }
+    }
+    window.addEventListener('resize', adjustStickyPadding);
+    adjustStickyPadding();
+
+    // Event listeners
+    step1GenerateBtn.addEventListener('click', generateAndGoToStep2);
+    copyReviewBtn.addEventListener('click', copySelectedReview);
+    nextToStep3Btn.addEventListener('click', goToStep3);
+    copyFinalBtn.addEventListener('click', copyFinalSelected);
+    restartFromStep1.addEventListener('click', restartToStep1);
+    backToStep2Btn.addEventListener('click', backToStep2);
+
+    // Initialize
+    renderCategories();
+    showStep(1);
+  })();
+</script>
+</body>
+</html>
