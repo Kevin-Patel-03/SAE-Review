@@ -6,7 +6,7 @@ const BUSINESS = {
   location: "Bakrol, Ahmedabad",
   tagline: "Welding Rods, MIG/TIG Wire & Accessories",
   owner: "Kirtibhai Patel",
-  googleReviewUrl: "https://g.page/r/CXpEEDu8u5ZSEBM/review"
+  googleReviewLink: "https://g.page/r/CXpEEDu8u5ZSEBM/review"
 };
 
 // ============================================================
